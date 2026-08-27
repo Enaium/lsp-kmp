@@ -1,6 +1,7 @@
 plugins {
-    kotlin("multiplatform") version "2.4.10"
-    kotlin("plugin.serialization") version "2.4.10"
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.android.kmp)
 }
 
 group = "cn.enaium"
@@ -8,33 +9,70 @@ version = "1.0.0"
 
 repositories {
     mavenCentral()
+    google()
 }
 
 kotlin {
     jvmToolchain(25)
 
+    // JVM
     jvm()
+
+    // Apple: macOS
+    macosX64()
     macosArm64()
+
+    // Apple: iOS
+    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
+    // Apple: tvOS
+    tvosX64()
+    tvosArm64()
+    tvosSimulatorArm64()
+
+    // Apple: watchOS
+    watchosX64()
+    watchosArm64()
+    watchosSimulatorArm64()
+    watchosDeviceArm64()
+
+    // Linux
+    linuxX64()
+    linuxArm64()
+
+    // Windows
+    mingwX64()
+
+    android {
+        namespace = "cn.enaium.lsp"
+        compileSdk = 36
+        minSdk = 24
+    }
+
     sourceSets {
         commonMain.dependencies {
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
         }
         jvmMain.dependencies {
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
+            implementation(libs.kotlinx.coroutines.core)
         }
         jvmTest.dependencies {
             implementation(kotlin("test"))
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
+            implementation(libs.kotlinx.coroutines.test)
+        }
+        androidMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
         }
     }
 }
+
+
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()

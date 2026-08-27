@@ -8,7 +8,7 @@ A Kotlin Multiplatform implementation of the [Language Server Protocol](https://
 - **LSP model parity with lsp4j** — all 365 model classes from lsp4j's `Protocol.xtend`, including client/server capabilities, completion, hover, diagnostics, semantic tokens, inlay hints, inline values, notebook documents, and pull diagnostics (LSP 3.18)
 - **LSP services** — `LanguageServer`, `TextDocumentService`, `WorkspaceService`, `LanguageClient` interfaces mirroring lsp4j, wired to the wire by `LanguageServerLauncher`
 - **DAP** — debug adapter models (`initialize`, `setBreakpoints`, `threads`, `stackTrace`, `scopes`, `variables`, `evaluate`, …), `DebugAdapter` interface, and `DebugAdapterLauncher`
-- **Multiplatform** — `jvm`, `macosArm64`, `iosArm64`, `iosSimulatorArm64`
+- **Multiplatform** — JVM, Android, and every Kotlin/Native tier-1 target (macOS, iOS, tvOS, watchOS, Linux, Windows); all except JS/Wasm
 - **Examples** — a stdio-based language server and a TCP socket-based language server
 
 ## Modules
@@ -121,7 +121,17 @@ Both examples accept the standard LSP handshake (`initialize` → requests → `
 ```bash
 ./gradlew :jvmTest        # JVM tests
 ./gradlew :macosArm64Test # native (macOS arm64) tests
+./gradlew :linuxX64Test   # native (Linux x64) tests
 ```
+
+Simulator-based tests (iOS/tvOS/watchOS simulators) require the corresponding
+simulator runtime installed via Xcode; they are skipped when no runtime is
+available. Apple x64 test tasks are disabled (Rosetta not required for
+compilation, only for running tests).
+
+Dependencies are declared through a Gradle version catalog at
+`gradle/libs.versions.toml`. Android builds need an SDK location; provide it
+via `ANDROID_HOME` or a local `local.properties` (`sdk.dir=...`).
 
 The test suite covers JSON-RPC dispatch/correlation, typed launcher round-trips, stream framing, end-to-end pipe communication, and LSP lifecycle wiring.
 
