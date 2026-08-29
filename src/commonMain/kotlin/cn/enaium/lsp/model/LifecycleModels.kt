@@ -29,8 +29,8 @@ data class WorkDoneProgressEnd(
 /** A progress notification payload. */
 @Serializable
 data class ProgressParams(
-    val token: JsonElement? = null,
-    val value: JsonElement? = null,
+    val token: Token? = null,
+    val value: ProgressValue? = null,
 )
 
 /** An error response for an `initialize` request. */
@@ -42,7 +42,7 @@ data class InitializeError(
 /** The params sent in an `initialize` request. */
 @Serializable
 data class InitializeParams(
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
     val processId: Int? = null,
     val rootPath: String? = null,
     val rootUri: String? = null,
@@ -124,8 +124,8 @@ data class SetTraceParams(
 /** Represents a parameter of a callable-signature. */
 @Serializable
 data class ParameterInformation(
-    val label: JsonElement? = null,
-    val documentation: JsonElement? = null,
+    val label: ParameterLabel? = null,
+    val documentation: Documentation? = null,
 )
 
 /** Position in a text document expressed as zero-based line and character offset. */
@@ -174,8 +174,8 @@ data class ReferenceRegistrationOptions(
 data class ReferenceParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val context: ReferenceContext,
 )
 
@@ -184,7 +184,7 @@ data class ReferenceParams(
 data class PrepareRenameParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
 )
 
 /** One of the result types of the `textDocument/prepareRename` request. */
@@ -205,7 +205,7 @@ data class PrepareRenameDefaultBehavior(
 data class RenameParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
     val newName: String,
 )
 
@@ -214,7 +214,7 @@ data class RenameParams(
 data class LinkedEditingRangeParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
 )
 
 /** Linked editing range options. */

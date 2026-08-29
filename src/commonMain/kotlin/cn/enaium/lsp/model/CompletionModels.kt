@@ -37,8 +37,8 @@ data class CodeActionParams(
     val textDocument: TextDocumentIdentifier,
     val range: Range,
     val context: CodeActionContext,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** Documentation for a class of code actions. */
@@ -85,8 +85,8 @@ data class CodeLensOptions(
 @Serializable
 data class CodeLensParams(
     val textDocument: TextDocumentIdentifier,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** Represents a reference to a command. */
@@ -113,7 +113,7 @@ data class CompletionItem(
     val kind: Int? = null,
     val tags: List<Int>? = null,
     val detail: String? = null,
-    val documentation: JsonElement? = null,
+    val documentation: Documentation? = null,
     val deprecated: Boolean? = null,
     val preselect: Boolean? = null,
     val sortText: String? = null,
@@ -121,7 +121,7 @@ data class CompletionItem(
     val insertText: String? = null,
     val insertTextFormat: Int? = null,
     val insertTextMode: Int? = null,
-    val textEdit: JsonElement? = null,
+    val textEdit: TextEditOrInsert? = null,
     val textEditText: String? = null,
     val additionalTextEdits: List<TextEdit>? = null,
     val commitCharacters: List<String>? = null,
@@ -140,7 +140,7 @@ data class InsertReplaceRange(
 @Serializable
 data class CompletionItemDefaults(
     val commitCharacters: List<String>? = null,
-    val editRange: JsonElement? = null,
+    val editRange: EditRange? = null,
     val insertTextFormat: Int? = null,
     val insertTextMode: Int? = null,
     val data: JsonElement? = null,

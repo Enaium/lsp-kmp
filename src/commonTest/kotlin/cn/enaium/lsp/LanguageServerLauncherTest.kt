@@ -5,7 +5,6 @@ import cn.enaium.lsp.jsonrpc.JsonRpcJson
 import cn.enaium.lsp.jsonrpc.JsonRpcMessage
 import cn.enaium.lsp.jsonrpc.TestTransport
 import cn.enaium.lsp.model.*
-import kotlinx.serialization.json.JsonPrimitive
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -18,8 +17,8 @@ private class FakeLanguageServer : LanguageServer {
         initialized = true
         return InitializeResult(
             capabilities = ServerCapabilities(
-                textDocumentSync = JsonPrimitive(TextDocumentSyncKind.Full),
-                hoverProvider = JsonPrimitive(true),
+                textDocumentSync = TextDocumentSync.Kind(TextDocumentSyncKind.Full),
+                hoverProvider = HoverProvider.Enabled(true),
             ),
             serverInfo = ServerInfo(name = "fake", version = "1.0"),
         )
@@ -63,7 +62,7 @@ class LanguageServerLauncherTest {
         assertEquals(1L, reply.id?.value)
         val result = JsonRpcJson.json.decodeFromJsonElement(InitializeResult.serializer(), reply.result!!)
         assertEquals("fake", result.serverInfo?.name)
-        assertEquals(JsonPrimitive(true), result.capabilities.hoverProvider)
+        assertEquals(HoverProvider.Enabled(true), result.capabilities.hoverProvider)
         assertNotNull(result.capabilities.textDocumentSync)
         assertEquals(true, server.initialized)
     }

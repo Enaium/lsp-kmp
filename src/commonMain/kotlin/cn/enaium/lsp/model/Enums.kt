@@ -191,3 +191,9 @@ object WorkDoneProgressKind {
     const val Report = "report"
     const val End = "end"
 }
+
+/** Markup content kinds; values are literal strings. */
+object MarkupKind {
+    const val PlainText = "plaintext"
+    const val Markdown = "markdown"
+}

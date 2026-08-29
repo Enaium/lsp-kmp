@@ -23,9 +23,9 @@ class ExampleServerLanguage : LanguageServer {
     override fun initialize(params: InitializeParams): InitializeResult {
         return InitializeResult(
             capabilities = ServerCapabilities(
-                textDocumentSync = JsonPrimitive(TextDocumentSyncKind.Full),
+                textDocumentSync = TextDocumentSync.Kind(TextDocumentSyncKind.Full),
                 completionProvider = CompletionOptions(triggerCharacters = listOf(".")),
-                hoverProvider = JsonPrimitive(true),
+                hoverProvider = HoverProvider.Enabled(true),
             ),
             serverInfo = ServerInfo(name = "lsp-kmp-example", version = "1.0.0"),
         )
@@ -48,19 +48,22 @@ class ExampleServerLanguage : LanguageServer {
 
 /** A text document service that exposes completion and hover requests. */
 class ExampleTextDocumentService : TextDocumentService {
-    override fun completion(params: CompletionParams): JsonElement? {
-        val list = CompletionList(
-            isIncomplete = false,
-            items = listOf(
-                CompletionItem(label = "hello", kind = CompletionItemKind.Text, detail = "Example item"),
-                CompletionItem(label = "world", kind = CompletionItemKind.Text, detail = "Another item"),
-            ),
+    override fun completion(params: CompletionParams): CompletionResult? {
+        return CompletionResult.ListValue(
+            CompletionList(
+                isIncomplete = false,
+                items = listOf(
+                    CompletionItem(label = "hello", kind = CompletionItemKind.Text, detail = "Example item"),
+                    CompletionItem(label = "world", kind = CompletionItemKind.Text, detail = "Another item"),
+                ),
+            )
         )
-        return JsonRpcJson.json.encodeToJsonElement(CompletionList.serializer(), list)
     }
 
     override fun hover(params: HoverParams): Hover? {
-        return Hover(contents = JsonPrimitive("Example hover for ${params.textDocument.uri}"))
+        return Hover(
+            contents = HoverContents.Markup(MarkupContent(MarkupKind.PlainText, "Example hover for ${params.textDocument.uri}"))
+        )
     }
 }
 

@@ -373,7 +373,7 @@ data class RenameCapabilities(
 @Serializable
 data class PublishDiagnosticsCapabilities(
     val relatedInformation: Boolean? = null,
-    val tagSupport: JsonElement? = null,
+    val tagSupport: BooleanOrTagSupport? = null,
     val versionSupport: Boolean? = null,
     val codeDescriptionSupport: Boolean? = null,
     val dataSupport: Boolean? = null,
@@ -437,8 +437,8 @@ data class SemanticTokensClientCapabilitiesRequestsFull(
 
 @Serializable
 data class SemanticTokensClientCapabilitiesRequests(
-    val range: JsonElement? = null,
-    val full: JsonElement? = null,
+    val range: BooleanOrRaw? = null,
+    val full: BooleanOrDelta? = null,
 )
 
 @Serializable

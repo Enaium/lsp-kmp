@@ -20,18 +20,18 @@ interface TextDocumentService {
     fun willSaveWaitUntil(params: WillSaveTextDocumentParams): List<TextEdit>? = null
 
     // --- basic requests ---
-    fun completion(params: CompletionParams): JsonElement? = null
+    fun completion(params: CompletionParams): CompletionResult? = null
     fun resolveCompletionItem(unresolved: CompletionItem): CompletionItem? = null
     fun hover(params: HoverParams): Hover? = null
     fun signatureHelp(params: SignatureHelpParams): SignatureHelp? = null
-    fun declaration(params: DeclarationParams): JsonElement? = null
-    fun definition(params: DefinitionParams): JsonElement? = null
-    fun typeDefinition(params: TypeDefinitionParams): JsonElement? = null
-    fun implementation(params: ImplementationParams): JsonElement? = null
+    fun declaration(params: DeclarationParams): LocationResult? = null
+    fun definition(params: DefinitionParams): LocationResult? = null
+    fun typeDefinition(params: TypeDefinitionParams): LocationResult? = null
+    fun implementation(params: ImplementationParams): LocationResult? = null
     fun references(params: ReferenceParams): List<Location>? = null
     fun documentHighlight(params: DocumentHighlightParams): List<DocumentHighlight>? = null
-    fun documentSymbol(params: DocumentSymbolParams): JsonElement? = null
-    fun codeAction(params: CodeActionParams): JsonElement? = null
+    fun documentSymbol(params: DocumentSymbolParams): List<DocumentSymbolResult>? = null
+    fun codeAction(params: CodeActionParams): List<CodeActionResult>? = null
     fun resolveCodeAction(unresolved: CodeAction): CodeAction? = null
     fun codeLens(params: CodeLensParams): List<CodeLens>? = null
     fun resolveCodeLens(unresolved: CodeLens): CodeLens? = null
@@ -42,7 +42,7 @@ interface TextDocumentService {
     fun rangesFormatting(params: DocumentRangesFormattingParams): List<TextEdit>? = null
     fun onTypeFormatting(params: DocumentOnTypeFormattingParams): List<TextEdit>? = null
     fun rename(params: RenameParams): WorkspaceEdit? = null
-    fun prepareRename(params: PrepareRenameParams): JsonElement? = null
+    fun prepareRename(params: PrepareRenameParams): PrepareRenameResultEither? = null
     fun linkedEditingRange(params: LinkedEditingRangeParams): LinkedEditingRanges? = null
 
     // --- links & colors ---
@@ -63,7 +63,7 @@ interface TextDocumentService {
     // --- ranges & tokens ---
     fun selectionRange(params: SelectionRangeParams): List<SelectionRange>? = null
     fun semanticTokensFull(params: SemanticTokensParams): SemanticTokens? = null
-    fun semanticTokensFullDelta(params: SemanticTokensDeltaParams): JsonElement? = null
+    fun semanticTokensFullDelta(params: SemanticTokensDeltaParams): SemanticTokensResult? = null
     fun semanticTokensRange(params: SemanticTokensRangeParams): SemanticTokens? = null
     fun moniker(params: MonikerParams): List<Moniker>? = null
 
@@ -72,13 +72,13 @@ interface TextDocumentService {
     fun resolveInlayHint(unresolved: InlayHint): InlayHint? = null
     fun inlineValue(params: InlineValueParams): List<InlineValue>? = null
     fun diagnostic(params: DocumentDiagnosticParams): DocumentDiagnosticReport? = null
-    fun inlineCompletion(params: InlineCompletionParams): JsonElement? = null
+    fun inlineCompletion(params: InlineCompletionParams): InlineCompletionResult? = null
 }
 
 /** The workspace service handles workspace-wide requests and notifications. */
 interface WorkspaceService {
     fun executeCommand(params: ExecuteCommandParams): JsonElement? = null
-    fun symbol(params: WorkspaceSymbolParams): JsonElement? = null
+    fun symbol(params: WorkspaceSymbolParams): WorkspaceSymbolResult? = null
     fun resolveWorkspaceSymbol(workspaceSymbol: WorkspaceSymbol): WorkspaceSymbol? = null
 
     fun didChangeConfiguration(params: DidChangeConfigurationParams) {}

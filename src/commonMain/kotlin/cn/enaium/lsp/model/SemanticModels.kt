@@ -22,8 +22,8 @@ data class SemanticTokensWithRegistrationOptions(
     val documentSelector: List<DocumentFilter>? = null,
     val workDoneProgress: Boolean? = null,
     val legend: SemanticTokensLegend,
-    val range: JsonElement? = null,
-    val full: JsonElement? = null,
+    val range: BooleanOrRaw? = null,
+    val full: BooleanOrDelta? = null,
     val id: String? = null,
 )
 
@@ -31,40 +31,40 @@ data class SemanticTokensWithRegistrationOptions(
 @Serializable
 data class ServerCapabilities(
     val positionEncoding: String? = null,
-    val textDocumentSync: JsonElement? = null,
+    val textDocumentSync: TextDocumentSync? = null,
     val notebookDocumentSync: NotebookDocumentSyncRegistrationOptions? = null,
-    val hoverProvider: JsonElement? = null,
+    val hoverProvider: HoverProvider? = null,
     val completionProvider: CompletionOptions? = null,
     val signatureHelpProvider: SignatureHelpOptions? = null,
-    val definitionProvider: JsonElement? = null,
-    val typeDefinitionProvider: JsonElement? = null,
-    val implementationProvider: JsonElement? = null,
-    val referencesProvider: JsonElement? = null,
-    val documentHighlightProvider: JsonElement? = null,
-    val documentSymbolProvider: JsonElement? = null,
-    val workspaceSymbolProvider: JsonElement? = null,
-    val codeActionProvider: JsonElement? = null,
+    val definitionProvider: DefinitionProvider? = null,
+    val typeDefinitionProvider: TypeDefinitionProvider? = null,
+    val implementationProvider: ImplementationProvider? = null,
+    val referencesProvider: ReferencesProvider? = null,
+    val documentHighlightProvider: DocumentHighlightProvider? = null,
+    val documentSymbolProvider: DocumentSymbolProvider? = null,
+    val workspaceSymbolProvider: WorkspaceSymbolProvider? = null,
+    val codeActionProvider: CodeActionProvider? = null,
     val codeLensProvider: CodeLensOptions? = null,
-    val documentFormattingProvider: JsonElement? = null,
-    val documentRangeFormattingProvider: JsonElement? = null,
+    val documentFormattingProvider: DocumentFormattingProvider? = null,
+    val documentRangeFormattingProvider: DocumentRangeFormattingProvider? = null,
     val documentOnTypeFormattingProvider: DocumentOnTypeFormattingOptions? = null,
-    val renameProvider: JsonElement? = null,
+    val renameProvider: RenameProvider? = null,
     val documentLinkProvider: DocumentLinkOptions? = null,
-    val colorProvider: JsonElement? = null,
-    val foldingRangeProvider: JsonElement? = null,
-    val declarationProvider: JsonElement? = null,
+    val colorProvider: ColorProvider? = null,
+    val foldingRangeProvider: FoldingRangeProvider? = null,
+    val declarationProvider: DeclarationProvider? = null,
     val executeCommandProvider: ExecuteCommandOptions? = null,
     val workspace: WorkspaceServerCapabilities? = null,
-    val typeHierarchyProvider: JsonElement? = null,
-    val callHierarchyProvider: JsonElement? = null,
-    val selectionRangeProvider: JsonElement? = null,
-    val linkedEditingRangeProvider: JsonElement? = null,
+    val typeHierarchyProvider: TypeHierarchyProvider? = null,
+    val callHierarchyProvider: CallHierarchyProvider? = null,
+    val selectionRangeProvider: SelectionRangeProvider? = null,
+    val linkedEditingRangeProvider: LinkedEditingRangeProvider? = null,
     val semanticTokensProvider: SemanticTokensWithRegistrationOptions? = null,
-    val monikerProvider: JsonElement? = null,
-    val inlayHintProvider: JsonElement? = null,
-    val inlineValueProvider: JsonElement? = null,
+    val monikerProvider: MonikerProvider? = null,
+    val inlayHintProvider: InlayHintProvider? = null,
+    val inlineValueProvider: InlineValueProvider? = null,
     val diagnosticProvider: DiagnosticRegistrationOptions? = null,
-    val inlineCompletionProvider: JsonElement? = null,
+    val inlineCompletionProvider: InlineCompletionProvider? = null,
     val textDocument: TextDocumentServerCapabilities? = null,
     val experimental: JsonElement? = null,
 )
@@ -96,15 +96,15 @@ data class ShowMessageRequestParams(
 data class SignatureHelpParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
     val context: SignatureHelpContext? = null,
 )
 
 /** The request is sent from the client to the server to resolve semantic tokens for a given whole file. */
 @Serializable
 data class SemanticTokensParams(
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val textDocument: TextDocumentIdentifier,
 )
 
@@ -124,8 +124,8 @@ data class SemanticTokensPartialResult(
 /** The request is sent from the client to the server to resolve semantic token deltas for a given whole file. */
 @Serializable
 data class SemanticTokensDeltaParams(
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val textDocument: TextDocumentIdentifier,
     val previousResultId: String,
 )
@@ -154,8 +154,8 @@ data class SemanticTokensDeltaPartialResult(
 /** The request is sent from the client to the server to resolve semantic tokens for a range in a given file. */
 @Serializable
 data class SemanticTokensRangeParams(
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val textDocument: TextDocumentIdentifier,
     val range: Range,
 )
@@ -189,7 +189,7 @@ data class SignatureHelpOptions(
 @Serializable
 data class SignatureInformation(
     val label: String,
-    val documentation: JsonElement? = null,
+    val documentation: Documentation? = null,
     val parameters: List<ParameterInformation>? = null,
     val activeParameter: Int? = null,
 )
@@ -243,7 +243,7 @@ data class WorkspaceSymbol(
     val name: String,
     val kind: Int,
     val tags: List<Int>? = null,
-    val location: JsonElement? = null,
+    val location: SymbolLocation? = null,
     val containerName: String? = null,
     val data: JsonElement? = null,
 )

@@ -22,7 +22,7 @@ data class RegistrationParams(
 data class DocumentFilter(
     val language: String? = null,
     val scheme: String? = null,
-    val pattern: JsonElement? = null,
+    val pattern: GlobPattern? = null,
 )
 
 /** Since most of the registration options require to specify a document selector there is a base interface that can be used. */
@@ -99,7 +99,7 @@ data class DocumentOnTypeFormattingRegistrationOptions(
 /** The workspace/executeCommand request is sent from the client to the server to trigger command execution on the server. */
 @Serializable
 data class ExecuteCommandParams(
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
     val command: String,
     val arguments: List<JsonElement>? = null,
 )
@@ -131,7 +131,7 @@ data class ApplyWorkspaceEditResponse(
 @Serializable
 data class WorkspaceFoldersOptions(
     val supported: Boolean? = null,
-    val changeNotifications: JsonElement? = null,
+    val changeNotifications: StringOrBoolean? = null,
 )
 
 /** The workspace/workspaceFolders request is sent from the server to the client to fetch the current open list of workspace folders. */
@@ -250,7 +250,7 @@ data class ConfigurationItem(
 /** The params of a `workspace/symbol` request. */
 @Serializable
 data class WorkspaceSymbolParams(
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val query: String,
 )

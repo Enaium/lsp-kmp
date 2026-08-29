@@ -23,8 +23,8 @@ class ExampleServerLanguage : LanguageServer {
     override fun initialize(params: InitializeParams): InitializeResult {
         return InitializeResult(
             capabilities = ServerCapabilities(
-                textDocumentSync = JsonPrimitive(TextDocumentSyncKind.Full),
-                hoverProvider = JsonPrimitive(true),
+                textDocumentSync = TextDocumentSync.Kind(TextDocumentSyncKind.Full),
+                hoverProvider = HoverProvider.Enabled(true),
             ),
             serverInfo = ServerInfo(name = "lsp-kmp-socket-example", version = "1.0.0"),
         )
@@ -48,7 +48,9 @@ class ExampleServerLanguage : LanguageServer {
 /** A text document service that answers hover requests over the socket. */
 class SocketTextDocumentService : TextDocumentService {
     override fun hover(params: HoverParams): Hover? {
-        return Hover(contents = JsonPrimitive("Socket hover for ${params.textDocument.uri}"))
+        return Hover(
+            contents = HoverContents.Markup(MarkupContent(MarkupKind.PlainText, "Socket hover for ${params.textDocument.uri}"))
+        )
     }
 }
 

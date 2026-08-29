@@ -24,7 +24,7 @@ data class InlayHintRegistrationOptions(
 
 @Serializable
 data class InlayHintParams(
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
     val textDocument: TextDocumentIdentifier,
     val range: Range,
 )
@@ -32,10 +32,10 @@ data class InlayHintParams(
 @Serializable
 data class InlayHint(
     val position: Position,
-    val label: JsonElement,
+    val label: InlayHintLabel,
     val kind: Int? = null,
     val textEdits: List<TextEdit>? = null,
-    val tooltip: JsonElement? = null,
+    val tooltip: Documentation? = null,
     val paddingLeft: Boolean? = null,
     val paddingRight: Boolean? = null,
     val data: JsonElement? = null,
@@ -44,7 +44,7 @@ data class InlayHint(
 @Serializable
 data class InlayHintLabelPart(
     val value: String,
-    val tooltip: JsonElement? = null,
+    val tooltip: Documentation? = null,
     val location: Location? = null,
     val command: Command? = null,
 )
@@ -68,7 +68,7 @@ data class InlineValueRegistrationOptions(
 
 @Serializable
 data class InlineValueParams(
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
     val textDocument: TextDocumentIdentifier,
     val range: Range,
     val context: InlineValueContext,
@@ -132,8 +132,8 @@ data class DiagnosticRegistrationOptions(
 
 @Serializable
 data class DocumentDiagnosticParams(
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val textDocument: TextDocumentIdentifier,
     val identifier: String? = null,
     val previousResultId: String? = null,
@@ -157,19 +157,19 @@ data class RelatedFullDocumentDiagnosticReport(
     val kind: String = "full",
     val resultId: String? = null,
     val items: List<Diagnostic>,
-    val relatedDocuments: Map<String, JsonElement>? = null,
+    val relatedDocuments: Map<String, DocumentDiagnosticEither>? = null,
 )
 
 @Serializable
 data class RelatedUnchangedDocumentDiagnosticReport(
     val kind: String = "unchanged",
     val resultId: String,
-    val relatedDocuments: Map<String, JsonElement>? = null,
+    val relatedDocuments: Map<String, DocumentDiagnosticEither>? = null,
 )
 
 @Serializable
 data class DocumentDiagnosticReportPartialResult(
-    val relatedDocuments: Map<String, JsonElement>,
+    val relatedDocuments: Map<String, DocumentDiagnosticEither>,
 )
 
 @Serializable
@@ -179,8 +179,8 @@ data class DiagnosticServerCancellationData(
 
 @Serializable
 data class WorkspaceDiagnosticParams(
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val identifier: String? = null,
     val previousResultIds: List<PreviousResultId>,
 )
@@ -193,7 +193,7 @@ data class PreviousResultId(
 
 @Serializable
 data class WorkspaceDiagnosticReport(
-    val items: List<JsonElement>,
+    val items: List<WorkspaceDocumentDiagnosticEither>,
 )
 
 @Serializable
@@ -215,7 +215,7 @@ data class WorkspaceUnchangedDocumentDiagnosticReport(
 
 @Serializable
 data class WorkspaceDiagnosticReportPartialResult(
-    val items: List<JsonElement>,
+    val items: List<WorkspaceDocumentDiagnosticEither>,
 )
 
 @Serializable
@@ -248,7 +248,7 @@ data class ExecutionSummary(
 
 @Serializable
 data class NotebookCellTextDocumentFilter(
-    val notebook: JsonElement,
+    val notebook: NotebookFilterEither,
     val language: String? = null,
 )
 
@@ -256,7 +256,7 @@ data class NotebookCellTextDocumentFilter(
 data class NotebookDocumentFilter(
     val notebookType: String? = null,
     val scheme: String? = null,
-    val pattern: JsonElement? = null,
+    val pattern: GlobPattern? = null,
 )
 
 @Serializable
@@ -267,7 +267,7 @@ data class NotebookDocumentSyncClientCapabilities(
 
 @Serializable
 data class NotebookSelector(
-    val notebook: JsonElement? = null,
+    val notebook: NotebookFilterEither? = null,
     val cells: List<NotebookSelectorCell>? = null,
 )
 
@@ -378,7 +378,7 @@ data class InlineCompletionRegistrationOptions(
 data class InlineCompletionParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
     val context: InlineCompletionContext,
 )
 
@@ -401,7 +401,7 @@ data class InlineCompletionList(
 
 @Serializable
 data class InlineCompletionItem(
-    val insertText: JsonElement,
+    val insertText: InlineCompletionInsertText,
     val filterText: String? = null,
     val range: Range? = null,
     val command: Command? = null,

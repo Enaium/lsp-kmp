@@ -43,16 +43,10 @@ data class WorkspaceSymbolRegistrationOptions(
  * The result of a `textDocument/diagnostic` request (pull diagnostics).
  * Either a related full or related unchanged document diagnostic report.
  */
-typealias DocumentDiagnosticReport = JsonElement
+typealias DocumentDiagnosticReport = DocumentDiagnosticEither
 
 /**
  * The result of a `workspace/diagnostic` request.
  * Either a workspace full or workspace unchanged document diagnostic report.
  */
-typealias WorkspaceDocumentDiagnosticReport = JsonElement
-
-/**
- * An inline value, which is one of `InlineValueText`,
- * `InlineValueVariableLookup` or `InlineValueEvaluatableExpression`.
- */
-typealias InlineValue = JsonElement
+typealias WorkspaceDocumentDiagnosticReport = WorkspaceDocumentDiagnosticEither

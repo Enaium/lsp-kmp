@@ -7,8 +7,8 @@ import kotlinx.serialization.json.JsonElement
 @Serializable
 data class DocumentColorParams(
     val textDocument: TextDocumentIdentifier,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** Represents a color range in a document. */
@@ -33,8 +33,8 @@ data class ColorPresentationParams(
     val textDocument: TextDocumentIdentifier,
     val color: Color,
     val range: Range,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** The result of a `textDocument/colorPresentation` request. */
@@ -49,8 +49,8 @@ data class ColorPresentation(
 @Serializable
 data class FoldingRangeRequestParams(
     val textDocument: TextDocumentIdentifier,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** A set of predefined range kinds. */
@@ -76,23 +76,23 @@ data class FoldingRange(
 data class CallHierarchyPrepareParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
 )
 
 /** The parameters of a `callHierarchy/incomingCalls` request. */
 @Serializable
 data class CallHierarchyIncomingCallsParams(
     val item: CallHierarchyItem,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** The parameters of a `callHierarchy/outgoingCalls` request. */
 @Serializable
 data class CallHierarchyOutgoingCallsParams(
     val item: CallHierarchyItem,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** Represents an incoming call, e.g. a caller of a method or constructor. */
@@ -127,8 +127,8 @@ data class CallHierarchyItem(
 data class SelectionRangeParams(
     val textDocument: TextDocumentIdentifier,
     val positions: List<Position>,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** Selection range options. */
@@ -170,7 +170,7 @@ data class HoverRegistrationOptions(
 data class HoverParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
 )
 
 /** Declaration options. */
@@ -192,8 +192,8 @@ data class DeclarationRegistrationOptions(
 data class DeclarationParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** Definition options. */
@@ -214,8 +214,8 @@ data class DefinitionRegistrationOptions(
 data class DefinitionParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** Type definition options. */
@@ -237,8 +237,8 @@ data class TypeDefinitionRegistrationOptions(
 data class TypeDefinitionParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** Implementation options. */
@@ -260,8 +260,8 @@ data class ImplementationRegistrationOptions(
 data class ImplementationParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** Document highlight options. */
@@ -282,8 +282,8 @@ data class DocumentHighlightRegistrationOptions(
 data class DocumentHighlightParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** Moniker options. */
@@ -304,8 +304,8 @@ data class MonikerRegistrationOptions(
 data class MonikerParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
 )
 
 /** Moniker uniqueness level to define scope of the moniker. */
@@ -336,13 +336,13 @@ data class Moniker(
 /** The parameters of a `window/workDoneProgress/create` request. */
 @Serializable
 data class WorkDoneProgressCreateParams(
-    val token: JsonElement? = null,
+    val token: Token? = null,
 )
 
 /** The parameters of a `window/workDoneProgress/cancel` notification. */
 @Serializable
 data class WorkDoneProgressCancelParams(
-    val token: JsonElement? = null,
+    val token: Token? = null,
 )
 
 /** Params to show a document. */

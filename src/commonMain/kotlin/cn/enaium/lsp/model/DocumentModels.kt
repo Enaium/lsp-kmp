@@ -8,10 +8,10 @@ import kotlinx.serialization.json.JsonElement
 data class Diagnostic(
     val range: Range,
     val severity: Int? = null,
-    val code: JsonElement? = null,
+    val code: DiagnosticCode? = null,
     val codeDescription: DiagnosticCodeDescription? = null,
     val source: String? = null,
-    val message: JsonElement? = null,
+    val message: Documentation? = null,
     val tags: List<Int>? = null,
     val relatedInformation: List<DiagnosticRelatedInformation>? = null,
     val data: JsonElement? = null,
@@ -56,7 +56,7 @@ data class DidChangeWatchedFilesRegistrationOptions(
 
 @Serializable
 data class FileSystemWatcher(
-    val globPattern: JsonElement? = null,
+    val globPattern: GlobPattern? = null,
     val kind: Int? = null,
 )
 
@@ -70,7 +70,7 @@ object WatchKind {
 /** A relative pattern is a helper to construct glob patterns that are matched relatively to a base URI. */
 @Serializable
 data class RelativePattern(
-    val baseUri: JsonElement? = null,
+    val baseUri: BaseUri? = null,
     val pattern: String,
 )
 
@@ -112,7 +112,7 @@ data class FormattingOptions(
 /** The document formatting request is sent from the server to the client to format a whole document. */
 @Serializable
 data class DocumentFormattingParams(
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
     val textDocument: TextDocumentIdentifier,
     val options: FormattingOptions,
 )
@@ -149,8 +149,8 @@ data class DocumentLink(
 /** The document links request is sent from the client to the server to request the location of links in a document. */
 @Serializable
 data class DocumentLinkParams(
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val textDocument: TextDocumentIdentifier,
 )
 
@@ -204,7 +204,7 @@ data class TextDocumentSyncOptions(
     val change: Int? = null,
     val willSave: Boolean? = null,
     val willSaveWaitUntil: Boolean? = null,
-    val save: JsonElement? = null,
+    val save: Save? = null,
 )
 
 /** Static registration options to be returned in the initialize request. */
@@ -233,7 +233,7 @@ data class DocumentOnTypeFormattingParams(
 /** The document range formatting request is sent from the client to the server to format a given range in a document. */
 @Serializable
 data class DocumentRangeFormattingParams(
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
     val textDocument: TextDocumentIdentifier,
     val options: FormattingOptions,
     val range: Range,
@@ -242,7 +242,7 @@ data class DocumentRangeFormattingParams(
 /** The document ranges formatting request is sent from the client to the server to format multiple ranges at once in a document. */
 @Serializable
 data class DocumentRangesFormattingParams(
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
     val textDocument: TextDocumentIdentifier,
     val options: FormattingOptions,
     val ranges: List<Range>,
@@ -267,20 +267,20 @@ data class DocumentRangeFormattingRegistrationOptions(
 data class TypeHierarchyPrepareParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
 )
 
 @Serializable
 data class TypeHierarchySupertypesParams(
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val item: TypeHierarchyItem,
 )
 
 @Serializable
 data class TypeHierarchySubtypesParams(
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val item: TypeHierarchyItem,
 )
 
@@ -300,8 +300,8 @@ data class DocumentSymbolRegistrationOptions(
 /** The document symbol request is sent from the client to the server to list all symbols found in a given text document. */
 @Serializable
 data class DocumentSymbolParams(
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val textDocument: TextDocumentIdentifier,
 )
 
@@ -322,7 +322,7 @@ data class MarkupContent(
 /** The result of a `textDocument/hover` request. */
 @Serializable
 data class Hover(
-    val contents: JsonElement? = null,
+    val contents: HoverContents? = null,
     val range: Range? = null,
 )
 

@@ -59,23 +59,23 @@ class LanguageServerLauncher(
             }
 
             launcher.onRequest("textDocument/hover", HoverParams.serializer(), Hover.serializer()) { textDocument.hover(it) }
-            launcher.onRequestJson("textDocument/completion", CompletionParams.serializer()) { textDocument.completion(it) }
+            launcher.onRequest("textDocument/completion", CompletionParams.serializer(), CompletionResult.serializer()) { textDocument.completion(it) }
             launcher.onRequest("completionItem/resolve", CompletionItem.serializer(), CompletionItem.serializer()) {
                 textDocument.resolveCompletionItem(it)
             }
             launcher.onRequest("textDocument/signatureHelp", SignatureHelpParams.serializer(), SignatureHelp.serializer()) {
                 textDocument.signatureHelp(it)
             }
-            launcher.onRequestJson("textDocument/declaration", DeclarationParams.serializer()) { textDocument.declaration(it) }
-            launcher.onRequestJson("textDocument/definition", DefinitionParams.serializer()) { textDocument.definition(it) }
-            launcher.onRequestJson("textDocument/typeDefinition", TypeDefinitionParams.serializer()) { textDocument.typeDefinition(it) }
-            launcher.onRequestJson("textDocument/implementation", ImplementationParams.serializer()) { textDocument.implementation(it) }
+            launcher.onRequest("textDocument/declaration", DeclarationParams.serializer(), LocationResult.serializer()) { textDocument.declaration(it) }
+            launcher.onRequest("textDocument/definition", DefinitionParams.serializer(), LocationResult.serializer()) { textDocument.definition(it) }
+            launcher.onRequest("textDocument/typeDefinition", TypeDefinitionParams.serializer(), LocationResult.serializer()) { textDocument.typeDefinition(it) }
+            launcher.onRequest("textDocument/implementation", ImplementationParams.serializer(), LocationResult.serializer()) { textDocument.implementation(it) }
             launcher.onRequest("textDocument/references", ReferenceParams.serializer(), list(Location.serializer())) { textDocument.references(it) }
             launcher.onRequest("textDocument/documentHighlight", DocumentHighlightParams.serializer(), list(DocumentHighlight.serializer())) {
                 textDocument.documentHighlight(it)
             }
-            launcher.onRequestJson("textDocument/documentSymbol", DocumentSymbolParams.serializer()) { textDocument.documentSymbol(it) }
-            launcher.onRequestJson("textDocument/codeAction", CodeActionParams.serializer()) { textDocument.codeAction(it) }
+            launcher.onRequest("textDocument/documentSymbol", DocumentSymbolParams.serializer(), list(DocumentSymbolResult.serializer())) { textDocument.documentSymbol(it) }
+            launcher.onRequest("textDocument/codeAction", CodeActionParams.serializer(), list(CodeActionResult.serializer())) { textDocument.codeAction(it) }
             launcher.onRequest("codeAction/resolve", CodeAction.serializer(), CodeAction.serializer()) {
                 textDocument.resolveCodeAction(it)
             }
@@ -95,7 +95,7 @@ class LanguageServerLauncher(
                 textDocument.onTypeFormatting(it)
             }
             launcher.onRequest("textDocument/rename", RenameParams.serializer(), WorkspaceEdit.serializer()) { textDocument.rename(it) }
-            launcher.onRequestJson("textDocument/prepareRename", PrepareRenameParams.serializer()) { textDocument.prepareRename(it) }
+            launcher.onRequest("textDocument/prepareRename", PrepareRenameParams.serializer(), PrepareRenameResultEither.serializer()) { textDocument.prepareRename(it) }
             launcher.onRequest("textDocument/linkedEditingRange", LinkedEditingRangeParams.serializer(), LinkedEditingRanges.serializer()) {
                 textDocument.linkedEditingRange(it)
             }
@@ -141,7 +141,7 @@ class LanguageServerLauncher(
             launcher.onRequest("textDocument/semanticTokens/full", SemanticTokensParams.serializer(), SemanticTokens.serializer()) {
                 textDocument.semanticTokensFull(it)
             }
-            launcher.onRequestJson("textDocument/semanticTokens/full/delta", SemanticTokensDeltaParams.serializer()) {
+            launcher.onRequest("textDocument/semanticTokens/full/delta", SemanticTokensDeltaParams.serializer(), SemanticTokensResult.serializer()) {
                 textDocument.semanticTokensFullDelta(it)
             }
             launcher.onRequest("textDocument/semanticTokens/range", SemanticTokensRangeParams.serializer(), SemanticTokens.serializer()) {
@@ -151,9 +151,9 @@ class LanguageServerLauncher(
 
             launcher.onRequest("textDocument/inlayHint", InlayHintParams.serializer(), list(InlayHint.serializer())) { textDocument.inlayHint(it) }
             launcher.onRequest("inlayHint/resolve", InlayHint.serializer(), InlayHint.serializer()) { textDocument.resolveInlayHint(it) }
-            launcher.onRequest("textDocument/inlineValue", InlineValueParams.serializer(), list(JsonElement.serializer())) { textDocument.inlineValue(it) }
-            launcher.onRequestJson("textDocument/diagnostic", DocumentDiagnosticParams.serializer()) { textDocument.diagnostic(it) }
-            launcher.onRequestJson("textDocument/inlineCompletion", InlineCompletionParams.serializer()) {
+            launcher.onRequest("textDocument/inlineValue", InlineValueParams.serializer(), list(InlineValue.serializer())) { textDocument.inlineValue(it) }
+            launcher.onRequest("textDocument/diagnostic", DocumentDiagnosticParams.serializer(), DocumentDiagnosticEither.serializer()) { textDocument.diagnostic(it) }
+            launcher.onRequest("textDocument/inlineCompletion", InlineCompletionParams.serializer(), InlineCompletionResult.serializer()) {
                 textDocument.inlineCompletion(it)
             }
         }
@@ -161,7 +161,7 @@ class LanguageServerLauncher(
         val workspace = languageServer.workspaceService()
         if (workspace != null) {
             launcher.onRequestJson("workspace/executeCommand", ExecuteCommandParams.serializer()) { workspace.executeCommand(it) }
-            launcher.onRequestJson("workspace/symbol", WorkspaceSymbolParams.serializer()) { workspace.symbol(it) }
+            launcher.onRequest("workspace/symbol", WorkspaceSymbolParams.serializer(), WorkspaceSymbolResult.serializer()) { workspace.symbol(it) }
             launcher.onRequest("workspaceSymbol/resolve", WorkspaceSymbol.serializer(), WorkspaceSymbol.serializer()) {
                 workspace.resolveWorkspaceSymbol(it)
             }
@@ -186,7 +186,7 @@ class LanguageServerLauncher(
                 workspace.willDeleteFiles(it)
             }
             launcher.onNotification("workspace/didDeleteFiles", DeleteFilesParams.serializer()) { workspace.didDeleteFiles(it) }
-            launcher.onRequestJson("workspace/diagnostic", WorkspaceDiagnosticParams.serializer()) { workspace.diagnostic(it) }
+            launcher.onRequest("workspace/diagnostic", WorkspaceDiagnosticParams.serializer(), WorkspaceDocumentDiagnosticEither.serializer()) { workspace.diagnostic(it) }
             launcher.onRequest("workspace/textDocumentContent", TextDocumentContentParams.serializer(), TextDocumentContentResult.serializer()) {
                 workspace.textDocumentContent(it)
             }

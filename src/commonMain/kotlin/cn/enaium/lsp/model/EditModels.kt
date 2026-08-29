@@ -38,8 +38,8 @@ data class TextDocumentPositionParams(
 data class CompletionParams(
     val textDocument: TextDocumentIdentifier,
     val position: Position,
-    val workDoneToken: JsonElement? = null,
-    val partialResultToken: JsonElement? = null,
+    val workDoneToken: Token? = null,
+    val partialResultToken: Token? = null,
     val context: CompletionContext? = null,
 )
 
@@ -92,7 +92,7 @@ data class VersionedTextDocumentIdentifier(
 @Serializable
 data class TextDocumentEdit(
     val textDocument: VersionedTextDocumentIdentifier,
-    val edits: List<JsonElement>,
+    val edits: List<TextEditOrSnippet>,
 )
 
 /** Options to create a file. */
@@ -148,7 +148,7 @@ data class DeleteFile(
 @Serializable
 data class WorkspaceEdit(
     val changes: Map<String, List<TextEdit>>? = null,
-    val documentChanges: List<JsonElement>? = null,
+    val documentChanges: List<DocumentChange>? = null,
     val changeAnnotations: Map<String, ChangeAnnotation>? = null,
 )
 
