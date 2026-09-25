@@ -44,7 +44,17 @@ cn.enaium.lsp
 
 ## Usage
 
-The library is not yet published to a Maven repository. Consume it as a local project dependency or wait for publication.
+Published to Maven Central:
+
+```kotlin
+dependencies {
+    implementation("cn.enaium:lsp-kmp:1.0.1")
+}
+```
+
+The Kotlin Multiplatform module resolves the right variant per target (`-jvm`, `-android`,
+`-iosArm64`, `-macosArm64`, `-linuxX64`, `-mingwX64`, …); the JSON-RPC, LSP and DAP
+packages live in that one dependency.
 
 ### Writing a language server
 
