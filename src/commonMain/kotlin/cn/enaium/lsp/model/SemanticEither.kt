@@ -22,7 +22,7 @@ sealed interface BooleanOrRaw {
     @JvmInline
     value class Enabled(val value: Boolean) : BooleanOrRaw
 
-    data class Value(val value: JsonElement) : BooleanOrRaw
+    data class Value(val value: LSPAny) : BooleanOrRaw
 }
 
 object BooleanOrRawSerializer : KSerializer<BooleanOrRaw> {

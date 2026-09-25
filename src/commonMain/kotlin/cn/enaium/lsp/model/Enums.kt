@@ -197,3 +197,154 @@ object MarkupKind {
     const val PlainText = "plaintext"
     const val Markdown = "markdown"
 }
+
+/** JSON-RPC and LSP error codes (`ErrorCodes` in the specification). */
+object ErrorCodes {
+    const val ParseError = -32700
+    const val InvalidRequest = -32600
+    const val MethodNotFound = -32601
+    const val InvalidParams = -32602
+    const val InternalError = -32603
+    const val ServerNotInitialized = -32002
+    const val UnknownErrorCode = -32001
+}
+
+/** LSP-specific error codes. */
+object LSPErrorCodes {
+    const val RequestFailed = -32803
+    const val ServerCancelled = -32802
+    const val ContentModified = -32801
+    const val RequestCancelled = -32800
+}
+
+/** The values of the `trace` setting (`initialize`, `$/setTrace`). */
+object TraceValue {
+    const val Off = "off"
+    const val Messages = "messages"
+    const val Verbose = "verbose"
+}
+
+/** Position encoding kinds a client and server negotiate in `initialize`. */
+object PositionEncodingKind {
+    const val Utf8 = "utf-8"
+    const val Utf16 = "utf-16"
+    const val Utf32 = "utf-32"
+}
+
+/** The kind of a `textDocument/diagnostic` report. */
+object DocumentDiagnosticReportKind {
+    const val Full = "full"
+    const val Unchanged = "unchanged"
+}
+
+/** The format of tokens a client asks for in `textDocument/inlineCompletion`. */
+object TokenFormat {
+    const val Relative = "relative"
+}
+
+/** The semantic token types every client must understand. */
+object SemanticTokenTypes {
+    const val Namespace = "namespace"
+    const val Type = "type"
+    const val Class = "class"
+    const val Enum = "enum"
+    const val Interface = "interface"
+    const val Struct = "struct"
+    const val TypeParameter = "typeParameter"
+    const val Parameter = "parameter"
+    const val Variable = "variable"
+    const val Property = "property"
+    const val EnumMember = "enumMember"
+    const val Event = "event"
+    const val Function = "function"
+    const val Method = "method"
+    const val Macro = "macro"
+    const val Keyword = "keyword"
+    const val Modifier = "modifier"
+    const val Comment = "comment"
+    const val String = "string"
+    const val Number = "number"
+    const val Regexp = "regexp"
+    const val Operator = "operator"
+    const val Decorator = "decorator"
+    const val Label = "label"
+}
+
+/** The semantic token modifiers every client must understand. */
+object SemanticTokenModifiers {
+    const val Declaration = "declaration"
+    const val Definition = "definition"
+    const val Readonly = "readonly"
+    const val Static = "static"
+    const val Deprecated = "deprecated"
+    const val Abstract = "abstract"
+    const val Async = "async"
+    const val Modification = "modification"
+    const val Documentation = "documentation"
+    const val DefaultLibrary = "defaultLibrary"
+}
+
+/** The language ids of the `LanguageKind` enumeration. */
+object LanguageKind {
+    const val Abap = "abap"
+    const val Bat = "bat"
+    const val Bibtex = "bibtex"
+    const val Clojure = "clojure"
+    const val Coffeescript = "coffeescript"
+    const val C = "c"
+    const val Cpp = "cpp"
+    const val Csharp = "csharp"
+    const val Css = "css"
+    const val D = "d"
+    const val Pascal = "pascal"
+    const val Diff = "diff"
+    const val Dart = "dart"
+    const val Dockerfile = "dockerfile"
+    const val Elixir = "elixir"
+    const val Erlang = "erlang"
+    const val Fsharp = "fsharp"
+    const val GitCommit = "git-commit"
+    const val GitRebase = "git-rebase"
+    const val Go = "go"
+    const val Groovy = "groovy"
+    const val Handlebars = "handlebars"
+    const val Haskell = "haskell"
+    const val Html = "html"
+    const val Ini = "ini"
+    const val Java = "java"
+    const val Javascript = "javascript"
+    const val JavascriptReact = "javascriptreact"
+    const val Json = "json"
+    const val Latex = "latex"
+    const val Less = "less"
+    const val Lua = "lua"
+    const val Makefile = "makefile"
+    const val Markdown = "markdown"
+    const val ObjectiveC = "objective-c"
+    const val ObjectiveCpp = "objective-cpp"
+    const val Perl = "perl"
+    const val Perl6 = "perl6"
+    const val Php = "php"
+    const val Plaintext = "plaintext"
+    const val Powershell = "powershell"
+    const val Jade = "jade"
+    const val Python = "python"
+    const val R = "r"
+    const val Razor = "razor"
+    const val Ruby = "ruby"
+    const val Rust = "rust"
+    const val Scss = "scss"
+    const val Sass = "sass"
+    const val Scala = "scala"
+    const val Shaderlab = "shaderlab"
+    const val Shellscript = "shellscript"
+    const val Sql = "sql"
+    const val Swift = "swift"
+    const val Typescript = "typescript"
+    const val TypescriptReact = "typescriptreact"
+    const val Tex = "tex"
+    const val Vb = "vb"
+    const val Xml = "xml"
+    const val Xsl = "xsl"
+    const val Yaml = "yaml"
+}

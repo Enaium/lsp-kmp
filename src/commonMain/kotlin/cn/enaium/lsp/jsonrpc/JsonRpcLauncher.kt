@@ -26,8 +26,7 @@ class JsonRpcLauncher(
 
     fun <T, R> onRequest(method: String, paramsSerializer: KSerializer<T>, resultSerializer: KSerializer<R>, handler: (T) -> R?) {
         server.onRequest(method) { params ->
-            val typed = params?.let { JsonRpcJson.json.decodeFromJsonElement(paramsSerializer, it) }
-                ?: throw IllegalArgumentException("Missing params for request '$method'")
+            val typed = decodeParams(method, paramsSerializer, params)
             val result = handler(typed)
             result?.let { JsonRpcJson.json.encodeToJsonElement(resultSerializer, it) } ?: JsonNull
         }
@@ -43,11 +42,25 @@ class JsonRpcLauncher(
     /** Register a request handler that decodes params but returns a raw JSON result. */
     fun <T> onRequestJson(method: String, paramsSerializer: KSerializer<T>, handler: (T) -> JsonElement?) {
         server.onRequest(method) { params ->
-            val typed = params?.let { JsonRpcJson.json.decodeFromJsonElement(paramsSerializer, it) }
-                ?: throw IllegalArgumentException("Missing params for request '$method'")
-            handler(typed) ?: JsonNull
+            handler(decodeParams(method, paramsSerializer, params)) ?: JsonNull
         }
     }
+
+    /**
+     * Decodes a request's params, tolerating their absence when the serializer
+     * accepts null.
+     *
+     * Requests whose arguments are optional are routinely sent without a
+     * `params` member at all — DAP's `disconnect` and `terminate` are — and
+     * that must reach a handler registered with a nullable serializer instead
+     * of failing as if the arguments were required.
+     */
+    private fun <T> decodeParams(method: String, paramsSerializer: KSerializer<T>, params: JsonElement?): T =
+        if (params == null && !paramsSerializer.descriptor.isNullable) {
+            throw IllegalArgumentException("Missing params for request '$method'")
+        } else {
+            JsonRpcJson.json.decodeFromJsonElement(paramsSerializer, params ?: JsonNull)
+        }
 
     /** Register a request handler with an untyped payload. */
     fun onRequest(method: String, handler: (JsonElement?) -> JsonElement?) {
@@ -78,6 +91,29 @@ class JsonRpcLauncher(
         val element = params?.let { JsonRpcJson.json.encodeToJsonElement(paramsSerializer, it) }
         val deferred = server.request(method, element)
         return JsonRpcJson.json.decodeFromJsonElement(resultSerializer, deferred.await())
+    }
+
+    /**
+     * Sends a request whose result the peer may omit and awaits it.
+     *
+     * Returns null when the response carried no result: the spec makes the
+     * result of several server-to-client requests optional.
+     */
+    suspend fun <T, R : Any> requestResultOrNull(
+        method: String,
+        params: T?,
+        paramsSerializer: KSerializer<T>,
+        resultSerializer: KSerializer<R>,
+    ): R? {
+        val element = params?.let { JsonRpcJson.json.encodeToJsonElement(paramsSerializer, it) }
+        val result = server.request(method, element).await()
+        return if (result is JsonNull) null else JsonRpcJson.json.decodeFromJsonElement(resultSerializer, result)
+    }
+
+    /** Sends a request that has no result body and awaits its response. */
+    suspend fun <T> requestNoResult(method: String, params: T?, paramsSerializer: KSerializer<T>) {
+        val element = params?.let { JsonRpcJson.json.encodeToJsonElement(paramsSerializer, it) }
+        server.request(method, element).await()
     }
 
     /** Send a typed notification. */

@@ -1,7 +1,6 @@
 package cn.enaium.lsp.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 /** The parameters of a `textDocument/documentColor` request. */
 @Serializable
@@ -119,7 +118,7 @@ data class CallHierarchyItem(
     val uri: String,
     val range: Range,
     val selectionRange: Range,
-    val data: JsonElement? = null,
+    val data: LSPAny? = null,
 )
 
 /** A parameter literal used in selection range requests. */
@@ -336,13 +335,13 @@ data class Moniker(
 /** The parameters of a `window/workDoneProgress/create` request. */
 @Serializable
 data class WorkDoneProgressCreateParams(
-    val token: Token? = null,
+    val token: Token,
 )
 
 /** The parameters of a `window/workDoneProgress/cancel` notification. */
 @Serializable
 data class WorkDoneProgressCancelParams(
-    val token: Token? = null,
+    val token: Token,
 )
 
 /** Params to show a document. */

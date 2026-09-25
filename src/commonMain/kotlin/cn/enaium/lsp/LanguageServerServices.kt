@@ -19,6 +19,12 @@ interface TextDocumentService {
     fun willSave(params: WillSaveTextDocumentParams) {}
     fun willSaveWaitUntil(params: WillSaveTextDocumentParams): List<TextEdit>? = null
 
+    // --- notebook document notifications ---
+    fun didOpenNotebookDocument(params: DidOpenNotebookDocumentParams) {}
+    fun didChangeNotebookDocument(params: DidChangeNotebookDocumentParams) {}
+    fun didSaveNotebookDocument(params: DidSaveNotebookDocumentParams) {}
+    fun didCloseNotebookDocument(params: DidCloseNotebookDocumentParams) {}
+
     // --- basic requests ---
     fun completion(params: CompletionParams): CompletionResult? = null
     fun resolveCompletionItem(unresolved: CompletionItem): CompletionItem? = null
@@ -103,27 +109,42 @@ interface WindowService {
     fun publishDiagnostics(params: PublishDiagnosticsParams) {}
 }
 
-/** The client-facing interface the server uses to talk back to the client. */
+/**
+ * The client-facing interface the server uses to talk back to the client.
+ *
+ * Notifications fire and forget; requests are `suspend` functions that resume
+ * with the client's answer — a handler can `await` a decision (`showMessageRequest`,
+ * `applyEdit`, `configuration`, …) without blocking its thread. A request only
+ * completes while the transport is being read, so run [LanguageServerLauncher.listen]
+ * concurrently (`launch`/a thread) in a session that answers them.
+ *
+ * Every method has a default implementation; override the ones the server uses.
+ */
 interface LanguageClient {
-    fun applyEdit(params: ApplyWorkspaceEditParams): ApplyWorkspaceEditResponse? = null
-    fun registerCapability(params: RegistrationParams) {}
-    fun unregisterCapability(params: UnregistrationParams) {}
-    fun telemetryEvent(`object`: JsonElement?) {}
-    fun publishDiagnostics(params: PublishDiagnosticsParams) {}
+    // --- notifications ---
+
     fun showMessage(params: MessageParams) {}
-    fun showMessageRequest(params: ShowMessageRequestParams): MessageActionItem? = null
-    fun showDocument(params: ShowDocumentParams): ShowDocumentResult? = null
     fun logMessage(params: MessageParams) {}
-    fun workspaceFolders(): List<WorkspaceFolder>? = null
-    fun configuration(params: ConfigurationParams): List<JsonElement>? = null
-    fun createProgress(params: WorkDoneProgressCreateParams) {}
+    fun publishDiagnostics(params: PublishDiagnosticsParams) {}
+    fun telemetryEvent(`object`: JsonElement?) {}
     fun notifyProgress(params: ProgressParams) {}
     fun logTrace(params: LogTraceParams) {}
-    fun refreshSemanticTokens() {}
-    fun refreshCodeLenses() {}
-    fun refreshInlayHints() {}
-    fun refreshInlineValues() {}
-    fun refreshDiagnostics() {}
-    fun refreshFoldingRanges() {}
-    fun refreshTextDocumentContent(params: TextDocumentContentRefreshParams) {}
+
+    // --- requests ---
+
+    suspend fun applyEdit(params: ApplyWorkspaceEditParams): ApplyWorkspaceEditResponse? = null
+    suspend fun registerCapability(params: RegistrationParams) {}
+    suspend fun unregisterCapability(params: UnregistrationParams) {}
+    suspend fun showMessageRequest(params: ShowMessageRequestParams): MessageActionItem? = null
+    suspend fun showDocument(params: ShowDocumentParams): ShowDocumentResult? = null
+    suspend fun workspaceFolders(): List<WorkspaceFolder>? = null
+    suspend fun configuration(params: ConfigurationParams): List<JsonElement>? = null
+    suspend fun createProgress(params: WorkDoneProgressCreateParams) {}
+    suspend fun refreshSemanticTokens() {}
+    suspend fun refreshCodeLenses() {}
+    suspend fun refreshInlayHints() {}
+    suspend fun refreshInlineValues() {}
+    suspend fun refreshDiagnostics() {}
+    suspend fun refreshFoldingRanges() {}
+    suspend fun refreshTextDocumentContent(params: TextDocumentContentRefreshParams) {}
 }

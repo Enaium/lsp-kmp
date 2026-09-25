@@ -43,6 +43,16 @@ data class WorkspaceSymbolRegistrationOptions(
  * The result of a `textDocument/diagnostic` request (pull diagnostics).
  * Either a related full or related unchanged document diagnostic report.
  */
+/**
+ * Any JSON value — the spec's `LSPAny`. kotlinx's [JsonElement] is itself a
+ * sealed union (`JsonObject` | `JsonArray` | `JsonPrimitive` | `JsonNull`), so
+ * it is the union the spec asks for, named as the spec names it.
+ */
+typealias LSPAny = JsonElement
+
+/** A JSON object — the spec's `LSPObject`: `{ [key: string]: LSPAny }`. */
+typealias LSPObject = Map<String, LSPAny>
+
 typealias DocumentDiagnosticReport = DocumentDiagnosticEither
 
 /**

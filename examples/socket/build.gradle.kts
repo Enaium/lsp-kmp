@@ -1,6 +1,7 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
 plugins {
-    kotlin("jvm")
-    application
+    alias(libs.plugins.kotlin.multiplatform)
 }
 
 group = "cn.enaium"
@@ -10,15 +11,21 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation(project(":"))
-    implementation(libs.kotlinx.serialization.json)
-}
-
 kotlin {
     jvmToolchain(25)
-}
 
-application {
-    mainClass.set("cn.enaium.lsp.examples.socket.MainKt")
+    jvm {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        binaries {
+            executable {
+                mainClass.set("cn.enaium.lsp.examples.socket.MainKt")
+            }
+        }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(project(":"))
+        }
+    }
 }

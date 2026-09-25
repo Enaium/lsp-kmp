@@ -1,14 +1,13 @@
 package cn.enaium.lsp.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 /** The id used to register the request. The id can be used to deregister the request again. */
 @Serializable
 data class Registration(
     val id: String,
     val method: String,
-    val registerOptions: JsonElement? = null,
+    val registerOptions: LSPAny? = null,
 )
 
 /** The client/registerCapability request is sent from the server to the client to register for a new capability on the client side. */
@@ -101,7 +100,7 @@ data class DocumentOnTypeFormattingRegistrationOptions(
 data class ExecuteCommandParams(
     val workDoneToken: Token? = null,
     val command: String,
-    val arguments: List<JsonElement>? = null,
+    val arguments: List<LSPAny>? = null,
 )
 
 /** Execute command registration options. */
@@ -156,18 +155,18 @@ data class DidChangeWorkspaceFoldersParams(
 
 /** The server is interested in file notifications/requests. */
 @Serializable
-data class FileOperationsServerCapabilities(
-    val didCreate: FileOperationOptions? = null,
-    val willCreate: FileOperationOptions? = null,
-    val didRename: FileOperationOptions? = null,
-    val willRename: FileOperationOptions? = null,
-    val didDelete: FileOperationOptions? = null,
-    val willDelete: FileOperationOptions? = null,
+data class FileOperationOptions(
+    val didCreate: FileOperationRegistrationOptions? = null,
+    val willCreate: FileOperationRegistrationOptions? = null,
+    val didRename: FileOperationRegistrationOptions? = null,
+    val willRename: FileOperationRegistrationOptions? = null,
+    val didDelete: FileOperationRegistrationOptions? = null,
+    val willDelete: FileOperationRegistrationOptions? = null,
 )
 
-/** The options for file operations. */
+/** The options to register for a file operation request or notification. */
 @Serializable
-data class FileOperationOptions(
+data class FileOperationRegistrationOptions(
     val filters: List<FileOperationFilter>,
 )
 

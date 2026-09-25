@@ -86,7 +86,14 @@ class JsonRpcServer(private val consumer: MessageConsumer) {
 
     private fun handleNotification(message: JsonRpcMessage) {
         val method = message.method ?: return
-        notificationHandlers[method]?.invoke(message.params)
+        val handler = notificationHandlers[method] ?: return
+        // A notification has no response to carry a failure, and the spec makes
+        // notifications non-confirmable: a malformed one is dropped rather than
+        // allowed to tear down the receive loop.
+        try {
+            handler(message.params)
+        } catch (_: Throwable) {
+        }
     }
 
     private fun handleResponse(message: JsonRpcMessage) {

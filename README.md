@@ -6,8 +6,8 @@ A Kotlin Multiplatform implementation of the [Language Server Protocol](https://
 
 - **JSON-RPC 2.0 core** — message models, request/response correlation, `Content-Length` framed transport (shared by LSP and DAP)
 - **LSP model parity with lsp4j** — all 365 model classes from lsp4j's `Protocol.xtend`, including client/server capabilities, completion, hover, diagnostics, semantic tokens, inlay hints, inline values, notebook documents, and pull diagnostics (LSP 3.18)
-- **LSP services** — `LanguageServer`, `TextDocumentService`, `WorkspaceService`, `LanguageClient` interfaces mirroring lsp4j, wired to the wire by `LanguageServerLauncher`
-- **DAP** — debug adapter models (`initialize`, `setBreakpoints`, `threads`, `stackTrace`, `scopes`, `variables`, `evaluate`, …), `DebugAdapter` interface, and `DebugAdapterLauncher`
+- **LSP services** — `LanguageServer`, `TextDocumentService` (text *and* notebook documents), `WorkspaceService`, `LanguageClient` interfaces mirroring lsp4j, wired to the wire by `LanguageServerLauncher`
+- **DAP** — both ends of a debug session, speaking DAP's own envelope (`seq`/`type`/`command`, not JSON-RPC 2.0, which is what real adapters such as debugpy validate): the full request/response model (lifecycle, execution control, all four breakpoint kinds, inspection, reverse debugging) with typed event bodies, `DebugAdapter` + `DebugAdapterLauncher` for implementing an adapter, and `DebugClientLauncher` for driving one (`awaitInitialized`, and a non-blocking `send` for `launch`/`attach`, whose responses only arrive once the debuggee runs)
 - **Multiplatform** — JVM, Android, and every Kotlin/Native tier-1 target (macOS, iOS, tvOS, watchOS, Linux, Windows); all except JS/Wasm
 - **Examples** — a stdio-based language server and a TCP socket-based language server
 
@@ -26,9 +26,12 @@ cn.enaium.lsp
 ├── jsonrpc          # JSON-RPC 2.0 core (messages, server, transport, launcher)
 ├── model            # LSP data models (lsp4j parity)
 ├── dap              # Debug Adapter Protocol
-│   ├── model        # DAP data models
-│   ├── DebugAdapter
-│   └── DebugAdapterLauncher
+│   ├── model        # DAP data models (requests, responses, event bodies)
+│   ├── DapLauncher            # the DAP envelope over a transport
+│   ├── DebugAdapter           # implement an adapter
+│   ├── DebugAdapterLauncher   # serve it over a transport
+│   ├── DebugClient            # what an adapter sends events to
+│   └── DebugClientLauncher    # drive an adapter (the client end)
 ├── LanguageServer
 ├── LanguageServerLauncher
 └── LanguageServerServices
@@ -75,6 +78,17 @@ fun main() {
     // stdio transport: content-length framed messages on stdin/stdout
     val transport = StreamMessageTransport(System.`in`, System.out)
     val launcher = LanguageServerLauncher(transport, MyServer())
+
+    // The launcher reaches back to the editor through `client`: notifications
+    // are fire-and-forget, requests suspend until the editor answers.
+    //
+    //   val answer = launcher.client.showMessageRequest(
+    //       ShowMessageRequestParams(type = MessageType.Info, message = "Deploy?")
+    //   )
+    //   launcher.client.publishDiagnostics(PublishDiagnosticsParams(uri, diagnostics))
+    //
+    // Suspend requests complete while the transport is being read, so run
+    // `listen` concurrently when the server awaits the client.
     launcher.listen()
 }
 ```
@@ -98,6 +112,37 @@ fun main() {
 }
 ```
 
+### Driving a debug adapter
+
+`DebugClientLauncher` is the client end: it sends the standard requests and
+delivers adapter events to handlers you register. Requests suspend until the
+adapter answers, so run `listen()` concurrently.
+
+```kotlin
+val client = DebugClientLauncher(StreamMessageTransport(process.inputStream, process.outputStream))
+scope.launch { client.listen() }
+
+val capabilities = client.initialize(InitializeRequestArguments(adapterID = "kotlin"))
+client.onEvent(DapEvent.Stopped, StoppedEventBody.serializer()) { body ->
+    body?.threadId?.let { threadId ->
+        val frames = client.stackTrace(threadId).stackFrames
+        val scopes = client.scopes(frames.first().id).scopes
+        val locals = client.variables(scopes.first().variablesReference).variables
+        println("stopped at ${frames.first().name}: $locals")
+    }
+}
+client.onEvent(DapEvent.Output, OutputEventBody.serializer()) { print(it?.output) }
+
+client.setBreakpoints(Source(path = "/tmp/demo.kt"), listOf(SourceBreakpoint(line = 12)))
+client.launch(JsonElement) // adapter-defined arguments
+client.configurationDone()
+```
+
+Bodies the spec makes optional come back as `null` when the adapter omits them
+(a body-less response to a request the adapter supports is not an error), and
+`onRequest` registers handlers for the reverse direction (`runInTerminal`,
+`startDebugging`).
+
 ### Custom transports
 
 `MessageTransport` is a two-method interface (`send` / `receive`); `StreamMessageTransport` implements the standard `Content-Length` framing over any `InputStream`/`OutputStream` — including sockets, pipes, or WebSocket byte streams. Use the socket example as a reference for a TCP server.
@@ -108,10 +153,10 @@ Build and run:
 
 ```bash
 # stdio language server (LSP client integration, e.g. VS Code language client)
-./gradlew :examples:stdio:run
+./gradlew :examples:stdio:runJvm
 
 # socket language server on port 8080 (pass a port as the first argument)
-./gradlew :examples:socket:run
+./gradlew :examples:socket:runJvm
 ```
 
 Both examples accept the standard LSP handshake (`initialize` → requests → `shutdown` → `exit`).
@@ -133,7 +178,7 @@ Dependencies are declared through a Gradle version catalog at
 `gradle/libs.versions.toml`. Android builds need an SDK location; provide it
 via `ANDROID_HOME` or a local `local.properties` (`sdk.dir=...`).
 
-The test suite covers JSON-RPC dispatch/correlation, typed launcher round-trips, stream framing, end-to-end pipe communication, and LSP lifecycle wiring.
+The test suite covers JSON-RPC dispatch/correlation, typed launcher round-trips, stream framing, end-to-end pipe communication, LSP lifecycle wiring, and a full DAP session between a debug adapter and a debug client.
 
 ## License
 

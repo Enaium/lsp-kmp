@@ -3,6 +3,7 @@ package cn.enaium.lsp
 import cn.enaium.lsp.jsonrpc.JsonRpcLauncher
 import cn.enaium.lsp.jsonrpc.MessageTransport
 import cn.enaium.lsp.model.*
+import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.json.JsonElement
 
 /**
@@ -18,6 +19,8 @@ class LanguageServerLauncher(
 
     /** Client-facing facade that sends notifications/requests to the connected client. */
     val client: LanguageClient = object : LanguageClient {
+        // --- notifications ---
+
         override fun showMessage(params: MessageParams) {
             launcher.notify("window/showMessage", params, MessageParams.serializer())
         }
@@ -32,6 +35,87 @@ class LanguageServerLauncher(
 
         override fun telemetryEvent(`object`: JsonElement?) {
             launcher.notify("telemetry/event", `object`)
+        }
+
+        override fun notifyProgress(params: ProgressParams) {
+            launcher.notify("\$/progress", params, ProgressParams.serializer())
+        }
+
+        override fun logTrace(params: LogTraceParams) {
+            launcher.notify("\$/logTrace", params, LogTraceParams.serializer())
+        }
+
+        // --- requests ---
+
+        override suspend fun applyEdit(params: ApplyWorkspaceEditParams): ApplyWorkspaceEditResponse =
+            launcher.request(
+                "workspace/applyEdit",
+                params,
+                ApplyWorkspaceEditParams.serializer(),
+                ApplyWorkspaceEditResponse.serializer(),
+            )
+
+        override suspend fun registerCapability(params: RegistrationParams) {
+            launcher.requestNoResult("client/registerCapability", params, RegistrationParams.serializer())
+        }
+
+        override suspend fun unregisterCapability(params: UnregistrationParams) {
+            launcher.requestNoResult("client/unregisterCapability", params, UnregistrationParams.serializer())
+        }
+
+        override suspend fun showMessageRequest(params: ShowMessageRequestParams): MessageActionItem? =
+            launcher.requestResultOrNull(
+                "window/showMessageRequest",
+                params,
+                ShowMessageRequestParams.serializer(),
+                MessageActionItem.serializer(),
+            )
+
+        override suspend fun showDocument(params: ShowDocumentParams): ShowDocumentResult =
+            launcher.request(
+                "window/showDocument",
+                params,
+                ShowDocumentParams.serializer(),
+                ShowDocumentResult.serializer(),
+            )
+
+        override suspend fun workspaceFolders(): List<WorkspaceFolder>? = launcher.requestResultOrNull(
+            "workspace/workspaceFolders",
+            null,
+            JsonElement.serializer().nullable,
+            list(WorkspaceFolder.serializer()),
+        )
+
+        override suspend fun configuration(params: ConfigurationParams): List<JsonElement>? =
+            launcher.requestResultOrNull(
+                "workspace/configuration",
+                params,
+                ConfigurationParams.serializer(),
+                list(JsonElement.serializer()),
+            )
+
+        override suspend fun createProgress(params: WorkDoneProgressCreateParams) {
+            launcher.requestNoResult("window/workDoneProgress/create", params, WorkDoneProgressCreateParams.serializer())
+        }
+
+        override suspend fun refreshSemanticTokens() = refresh("workspace/semanticTokens/refresh")
+        override suspend fun refreshCodeLenses() = refresh("workspace/codeLens/refresh")
+        override suspend fun refreshInlayHints() = refresh("workspace/inlayHint/refresh")
+        override suspend fun refreshInlineValues() = refresh("workspace/inlineValue/refresh")
+        override suspend fun refreshDiagnostics() = refresh("workspace/diagnostic/refresh")
+        override suspend fun refreshFoldingRanges() = refresh("workspace/foldingRange/refresh")
+
+        override suspend fun refreshTextDocumentContent(params: TextDocumentContentRefreshParams) {
+            launcher.requestNoResult(
+                "workspace/textDocumentContent/refresh",
+                params,
+                TextDocumentContentRefreshParams.serializer(),
+            )
+        }
+
+        /** Refresh requests take no parameters and answer without a body. */
+        private suspend fun refresh(method: String) {
+            launcher.requestNoResult(method, null, JsonElement.serializer().nullable)
         }
     }
 
@@ -56,6 +140,19 @@ class LanguageServerLauncher(
             launcher.onNotification("textDocument/willSave", WillSaveTextDocumentParams.serializer()) { textDocument.willSave(it) }
             launcher.onRequest("textDocument/willSaveWaitUntil", WillSaveTextDocumentParams.serializer(), list(TextEdit.serializer())) {
                 textDocument.willSaveWaitUntil(it)
+            }
+
+            launcher.onNotification("notebookDocument/didOpen", DidOpenNotebookDocumentParams.serializer()) {
+                textDocument.didOpenNotebookDocument(it)
+            }
+            launcher.onNotification("notebookDocument/didChange", DidChangeNotebookDocumentParams.serializer()) {
+                textDocument.didChangeNotebookDocument(it)
+            }
+            launcher.onNotification("notebookDocument/didSave", DidSaveNotebookDocumentParams.serializer()) {
+                textDocument.didSaveNotebookDocument(it)
+            }
+            launcher.onNotification("notebookDocument/didClose", DidCloseNotebookDocumentParams.serializer()) {
+                textDocument.didCloseNotebookDocument(it)
             }
 
             launcher.onRequest("textDocument/hover", HoverParams.serializer(), Hover.serializer()) { textDocument.hover(it) }

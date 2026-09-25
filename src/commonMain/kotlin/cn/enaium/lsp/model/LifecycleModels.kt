@@ -1,11 +1,12 @@
 package cn.enaium.lsp.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 /** The progress notification payload to start work done progress. */
 @Serializable
 data class WorkDoneProgressBegin(
+    /** The discriminator of a `$/progress` payload; always [WorkDoneProgressKind.Begin]. */
+    val kind: String = WorkDoneProgressKind.Begin,
     val title: String,
     val cancellable: Boolean? = null,
     val message: String? = null,
@@ -15,6 +16,8 @@ data class WorkDoneProgressBegin(
 /** The notification payload about progress reporting. */
 @Serializable
 data class WorkDoneProgressReport(
+    /** The discriminator of a `$/progress` payload; always [WorkDoneProgressKind.Report]. */
+    val kind: String = WorkDoneProgressKind.Report,
     val cancellable: Boolean? = null,
     val message: String? = null,
     val percentage: Int? = null,
@@ -23,14 +26,16 @@ data class WorkDoneProgressReport(
 /** The notification payload signaling the end of a progress reporting. */
 @Serializable
 data class WorkDoneProgressEnd(
+    /** The discriminator of a `$/progress` payload; always [WorkDoneProgressKind.End]. */
+    val kind: String = WorkDoneProgressKind.End,
     val message: String? = null,
 )
 
 /** A progress notification payload. */
 @Serializable
 data class ProgressParams(
-    val token: Token? = null,
-    val value: ProgressValue? = null,
+    val token: Token,
+    val value: ProgressValue,
 )
 
 /** An error response for an `initialize` request. */
@@ -46,7 +51,7 @@ data class InitializeParams(
     val processId: Int? = null,
     val rootPath: String? = null,
     val rootUri: String? = null,
-    val initializationOptions: JsonElement? = null,
+    val initializationOptions: LSPAny? = null,
     val capabilities: ClientCapabilities,
     val clientInfo: ClientInfo? = null,
     val locale: String? = null,
@@ -124,7 +129,7 @@ data class SetTraceParams(
 /** Represents a parameter of a callable-signature. */
 @Serializable
 data class ParameterInformation(
-    val label: ParameterLabel? = null,
+    val label: ParameterLabel,
     val documentation: Documentation? = null,
 )
 

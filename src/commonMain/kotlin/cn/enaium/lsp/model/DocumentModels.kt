@@ -1,7 +1,6 @@
 package cn.enaium.lsp.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 /** The diagnostic's severity and related metadata. */
 @Serializable
@@ -11,10 +10,10 @@ data class Diagnostic(
     val code: DiagnosticCode? = null,
     val codeDescription: DiagnosticCodeDescription? = null,
     val source: String? = null,
-    val message: Documentation? = null,
+    val message: Documentation,
     val tags: List<Int>? = null,
     val relatedInformation: List<DiagnosticRelatedInformation>? = null,
-    val data: JsonElement? = null,
+    val data: LSPAny? = null,
 )
 
 /** Represents a related message and source code location for a diagnostic. */
@@ -33,7 +32,7 @@ data class DiagnosticCodeDescription(
 /** A notification sent from the client to the server to signal the change of configuration settings. */
 @Serializable
 data class DidChangeConfigurationParams(
-    val settings: JsonElement,
+    val settings: LSPAny,
 )
 
 /** The document change notification is sent from the client to the server to signal changes to a text document. */
@@ -56,7 +55,7 @@ data class DidChangeWatchedFilesRegistrationOptions(
 
 @Serializable
 data class FileSystemWatcher(
-    val globPattern: GlobPattern? = null,
+    val globPattern: GlobPattern,
     val kind: Int? = null,
 )
 
@@ -70,7 +69,7 @@ object WatchKind {
 /** A relative pattern is a helper to construct glob patterns that are matched relatively to a base URI. */
 @Serializable
 data class RelativePattern(
-    val baseUri: BaseUri? = null,
+    val baseUri: BaseUri,
     val pattern: String,
 )
 
@@ -143,7 +142,7 @@ data class DocumentLink(
     val range: Range,
     val target: String? = null,
     val tooltip: String? = null,
-    val data: JsonElement? = null,
+    val data: LSPAny? = null,
 )
 
 /** The document links request is sent from the client to the server to request the location of links in a document. */
@@ -322,7 +321,7 @@ data class MarkupContent(
 /** The result of a `textDocument/hover` request. */
 @Serializable
 data class Hover(
-    val contents: HoverContents? = null,
+    val contents: HoverContents,
     val range: Range? = null,
 )
 

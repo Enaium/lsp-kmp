@@ -1,7 +1,6 @@
 package cn.enaium.lsp.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 /** A code action represents a change that can be performed in code, e.g. to fix a problem or to refactor code. */
 @Serializable
@@ -13,7 +12,7 @@ data class CodeAction(
     val disabled: CodeActionDisabled? = null,
     val edit: WorkspaceEdit? = null,
     val command: Command? = null,
-    val data: JsonElement? = null,
+    val data: LSPAny? = null,
     val tags: List<Int>? = null,
 )
 
@@ -61,6 +60,7 @@ data class CodeActionOptions(
 @Serializable
 data class CodeActionRegistrationOptions(
     val codeActionKinds: List<String>? = null,
+    val documentation: List<CodeActionKindDocumentation>? = null,
     val resolveProvider: Boolean? = null,
     val documentSelector: List<DocumentFilter>? = null,
     val workDoneProgress: Boolean? = null,
@@ -71,7 +71,7 @@ data class CodeActionRegistrationOptions(
 data class CodeLens(
     val range: Range,
     val command: Command? = null,
-    val data: JsonElement? = null,
+    val data: LSPAny? = null,
 )
 
 /** Code Lens options. */
@@ -95,7 +95,7 @@ data class Command(
     val title: String,
     val tooltip: String? = null,
     val command: String,
-    val arguments: List<JsonElement>? = null,
+    val arguments: List<LSPAny>? = null,
 )
 
 /** Additional details for a completion item label. */
@@ -126,7 +126,7 @@ data class CompletionItem(
     val additionalTextEdits: List<TextEdit>? = null,
     val commitCharacters: List<String>? = null,
     val command: Command? = null,
-    val data: JsonElement? = null,
+    val data: LSPAny? = null,
 )
 
 /** The range if the insert is requested. */
@@ -143,7 +143,7 @@ data class CompletionItemDefaults(
     val editRange: EditRange? = null,
     val insertTextFormat: Int? = null,
     val insertTextMode: Int? = null,
-    val data: JsonElement? = null,
+    val data: LSPAny? = null,
 )
 
 /** Specifies how fields from a completion item should be combined with those from CompletionList.itemDefaults. */

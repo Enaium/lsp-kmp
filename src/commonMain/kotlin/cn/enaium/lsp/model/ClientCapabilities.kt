@@ -1,7 +1,6 @@
 package cn.enaium.lsp.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 /** Supports dynamic registration. */
 @Serializable
@@ -585,7 +584,7 @@ data class ClientCapabilities(
     val notebookDocument: NotebookDocumentClientCapabilities? = null,
     val window: WindowClientCapabilities? = null,
     val general: GeneralClientCapabilities? = null,
-    val experimental: JsonElement? = null,
+    val experimental: LSPAny? = null,
 )
 
 /** The kind of a code action. */

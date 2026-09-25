@@ -63,7 +63,7 @@ object ParameterLabelSerializer : KSerializer<ParameterLabel> {
 sealed interface ProgressValue {
     data class WorkDone(val value: WorkDoneProgressNotificationValue) : ProgressValue
 
-    data class Raw(val value: JsonElement) : ProgressValue
+    data class Raw(val value: LSPAny) : ProgressValue
 }
 
 /**

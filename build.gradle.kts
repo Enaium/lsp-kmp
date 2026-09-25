@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "cn.enaium"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -54,21 +54,18 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.serialization.json)
+            // These types are part of the public API (KSerializer/JsonElement in
+            // the JSON-RPC and DAP launchers, CompletableDeferred in the request
+            // APIs), so consumers need them on their compile classpath too.
+            api(libs.kotlinx.coroutines.core)
+            api(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
         }
-        jvmMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
-        }
         jvmTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
-        }
-        androidMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
         }
     }
 }

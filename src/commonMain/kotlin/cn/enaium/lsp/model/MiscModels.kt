@@ -1,7 +1,6 @@
 package cn.enaium.lsp.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class InlayHintCapabilities(
@@ -38,7 +37,7 @@ data class InlayHint(
     val tooltip: Documentation? = null,
     val paddingLeft: Boolean? = null,
     val paddingRight: Boolean? = null,
-    val data: JsonElement? = null,
+    val data: LSPAny? = null,
 )
 
 @Serializable
@@ -228,7 +227,7 @@ data class NotebookDocument(
     val uri: String,
     val notebookType: String,
     val version: Int = 0,
-    val metadata: JsonElement? = null,
+    val metadata: LSPObject? = null,
     val cells: List<NotebookCell>,
 )
 
@@ -236,7 +235,7 @@ data class NotebookDocument(
 data class NotebookCell(
     val kind: Int,
     val document: String,
-    val metadata: JsonElement? = null,
+    val metadata: LSPObject? = null,
     val executionSummary: ExecutionSummary? = null,
 )
 
@@ -309,7 +308,7 @@ data class VersionedNotebookDocumentIdentifier(
 
 @Serializable
 data class NotebookDocumentChangeEvent(
-    val metadata: JsonElement? = null,
+    val metadata: LSPObject? = null,
     val cells: NotebookDocumentChangeEventCells? = null,
 )
 

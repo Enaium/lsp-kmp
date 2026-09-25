@@ -1,15 +1,11 @@
 package cn.enaium.lsp.examples.stdio
 
 import cn.enaium.lsp.LanguageServer
-import cn.enaium.lsp.LanguageServerLauncher
 import cn.enaium.lsp.TextDocumentService
 import cn.enaium.lsp.WindowService
 import cn.enaium.lsp.WorkspaceService
-import cn.enaium.lsp.jsonrpc.JsonRpcJson
-import cn.enaium.lsp.jsonrpc.StreamMessageTransport
 import cn.enaium.lsp.model.*
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonPrimitive
+import kotlin.system.exitProcess
 
 /**
  * A minimal language server that runs over stdin/stdout.
@@ -37,7 +33,7 @@ class ExampleServerLanguage : LanguageServer {
     }
 
     override fun exit() {
-        Runtime.getRuntime().halt(if (shutdown) 0 else 1)
+        exitProcess(if (shutdown) 0 else 1)
     }
 
     override fun textDocumentService(): TextDocumentService? = ExampleTextDocumentService()
@@ -65,10 +61,4 @@ class ExampleTextDocumentService : TextDocumentService {
             contents = HoverContents.Markup(MarkupContent(MarkupKind.PlainText, "Example hover for ${params.textDocument.uri}"))
         )
     }
-}
-
-fun main() {
-    val transport = StreamMessageTransport(System.`in`, System.out)
-    val launcher = LanguageServerLauncher(transport, ExampleServerLanguage())
-    launcher.listen()
 }

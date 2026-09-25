@@ -85,7 +85,7 @@ data class InsertReplaceEdit(
 @Serializable
 data class VersionedTextDocumentIdentifier(
     val uri: String,
-    val version: Int? = null,
+    val version: Int,
 )
 
 /** Describes textual changes on a single text document. */

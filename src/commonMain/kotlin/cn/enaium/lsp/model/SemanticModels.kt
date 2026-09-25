@@ -1,7 +1,6 @@
 package cn.enaium.lsp.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 /** The token types and modifiers that the client supports for semantic tokens. */
 @Serializable
@@ -66,14 +65,14 @@ data class ServerCapabilities(
     val diagnosticProvider: DiagnosticRegistrationOptions? = null,
     val inlineCompletionProvider: InlineCompletionProvider? = null,
     val textDocument: TextDocumentServerCapabilities? = null,
-    val experimental: JsonElement? = null,
+    val experimental: LSPAny? = null,
 )
 
 /** Workspace specific server capabilities. */
 @Serializable
 data class WorkspaceServerCapabilities(
     val workspaceFolders: WorkspaceFoldersOptions? = null,
-    val fileOperations: FileOperationsServerCapabilities? = null,
+    val fileOperations: FileOperationOptions? = null,
     val textDocumentContent: TextDocumentContentRegistrationOptions? = null,
 )
 
@@ -204,7 +203,7 @@ data class TypeHierarchyItem(
     val uri: String,
     val range: Range,
     val selectionRange: Range,
-    val data: JsonElement? = null,
+    val data: LSPAny? = null,
 )
 
 /** Represents programming constructs like variables, classes, interfaces etc. that appear in a document. */
@@ -243,7 +242,7 @@ data class WorkspaceSymbol(
     val name: String,
     val kind: Int,
     val tags: List<Int>? = null,
-    val location: SymbolLocation? = null,
+    val location: SymbolLocation,
     val containerName: String? = null,
-    val data: JsonElement? = null,
+    val data: LSPAny? = null,
 )
